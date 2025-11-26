@@ -1,0 +1,55 @@
+services:
+
+  api:
+    build: api
+    ports:
+      - 60080:80
+    volumes:
+      # Re-use local composer cache via host-volume
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      # Mount source-code for development
+      - ./:/app
+    env_file:
+      - docker-compose.env
+      - docker-compose.env.local
+
+  admin:
+    build: admin
+    ports:
+      - 61080:80
+    volumes:
+      # Re-use local composer cache via host-volume
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      # Mount source-code for development
+      - ./:/app
+    env_file:
+      - docker-compose.env
+      - docker-compose.env.local
+
+  queue:
+    build: console
+    volumes:
+      # Re-use local composer cache via host-volume
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+      # Mount source-code for development
+      - ./:/app:cached
+    command: queue/listen -v
+    env_file:
+      - docker-compose.env
+      - docker-compose.env.local
+
+  db:
+    image: mariadb:latest
+    volumes:
+      - /var/lib/mariadb:/var/lib/mysql:delegated
+    environment:
+      - MARIADB_ROOT_PASSWORD=mariadb
+      - MARIADB_DATABASE=mariadb
+      - MARIADB_USER=mariadb
+      - MARIADB_PASSWORD=mariadb
+
+  memcached:
+    image: memcached
+
+  redis:
+    image: redis:alpine
