@@ -1,4 +1,9 @@
 <?php
+
+use api\controllers\ApiErrorHandler;
+use yii\log\FileTarget;
+use yii\web\JsonParser;
+
 $params = array_merge(
     require __DIR__ . '/../../common/config/params.php',
     require __DIR__ . '/../../common/config/params-local.php',
@@ -13,22 +18,15 @@ return [
     'controllerNamespace' => 'api\controllers',
     'components' => [
         'request' => [
-            'csrfParam' => '_csrf-api',
-        ],
-        'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
-            'identityCookie' => ['name' => '_identity-api', 'httpOnly' => true],
-        ],
-        'session' => [
-            // this is the name of the session cookie used for login on the api
-            'name' => 'advanced-api',
+            'parsers' => [
+                'application/json' => JsonParser::class,
+            ]
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
             'targets' => [
                 [
-                    'class' => \yii\log\FileTarget::class,
+                    'class' => FileTarget::class,
                     'levels' => ['error', 'warning'],
                 ],
             ],
@@ -36,14 +34,27 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                [
+                    'pattern' => 'task/<id:\d+>',
+                    'route' => 'task/delete',
+                    'verb' => 'DELETE',
+                ],
+                [
+                    'pattern' => 'task/<id:\d+>',
+                    'route' => 'task/view',
+                    'verb' => 'GET',
+                ],
+                [
+                    'pattern' => 'task/<id:\d+>/status',
+                    'route' => 'task/update-status',
+                    'verb' => 'PUT',
+                ],
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

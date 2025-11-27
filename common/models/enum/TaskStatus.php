@@ -2,6 +2,8 @@
 
 namespace common\models\enum;
 
+use Yii;
+
 enum TaskStatus: int
 {
     case CREATED = 1;

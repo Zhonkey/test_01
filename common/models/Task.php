@@ -6,6 +6,7 @@ use common\behaviors\DateTImeAttributes;
 use common\behaviors\EnumedAttributes;
 use common\models\enum\TaskStatus;
 use common\models\traits\NotSaveExceptionedModel;
+use DateTime;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -14,9 +15,9 @@ use yii\behaviors\TimestampBehavior;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property string $status
- * @property int $created_at
- * @property int $updated_at
+ * @property TaskStatus $status
+ * @property DateTime|null $created_at
+ * @property DateTime|null $updated_at
  */
 class Task extends \yii\db\ActiveRecord
 {
@@ -37,7 +38,7 @@ class Task extends \yii\db\ActiveRecord
             [
                 [
                     'class' => TimestampBehavior::class,
-                    'value' => new \DateTime(),
+                    'value' => new DateTime(),
                 ],
                 [
                     'class' => EnumedAttributes::class,

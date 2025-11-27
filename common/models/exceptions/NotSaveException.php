@@ -15,4 +15,18 @@ class NotSaveException extends \Exception
     {
         return $this->model;
     }
+
+    /**
+     * @return array<string>
+     */
+    public function getErrors(): array
+    {
+        $errors = [];
+
+        foreach($this->model->getErrors() as $attribute => $attributeErrors) {
+            $errors[$attribute] = implode(', ', $attributeErrors);
+        }
+
+        return $errors;
+    }
 }
